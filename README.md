@@ -78,7 +78,7 @@ The gate was designed to verify playback **on a phone**, because that is where t
 
 What is proven: the test plan validates cleanly against the remote grid, the device resolves, and the app uploaded successfully to TestMu (app id `APP10160321641795624873061412`).
 
-What is **not** proven: the remote run itself. Both dispatch attempts failed inside TestMu's HyperExecute grid with a server-side error (`Push secret failed: 500` from the grid's secrets service) before any test step ran — no credits were consumed and no test executed. The desktop-browser gate above is the verified path and the one used for every verdict in this repo. The phone artefacts are included so the attempt, and its evidence, can be inspected.
+What is **not** proven: the remote run itself. The first dispatch attempts failed inside TestMu's HyperExecute grid with a server-side error (`Push secret failed: 500` from the grid's secrets service) before any test step ran. A final attempt on submission day got further — the dispatcher answered, and refused the job on plan grounds: the free account is a Linux-only plan, and dispatching an Android emulator requires the paid MultiOS entitlement (`Unable to dispatch job. You're currently on linux only plan.`). No credits were consumed by any attempt and no phone test ever executed. The desktop-browser gate above is the verified path and the one used for every verdict in this repo. The phone artefacts are included so the attempt, and its evidence, can be inspected.
 
 ## Files
 
