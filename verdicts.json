@@ -1,0 +1,32 @@
+[
+  {
+    "claim": "Your video has been sent and is ready to watch.",
+    "id": "gate-1795698061322",
+    "sentClaim": "Not sent. The delivery could not be verified: Kane watched the file and did not see real playing video frames. (Kane produced no visual proof of real frames in this run (fail-closed))",
+    "time": "2026-11-26T13:02:49.311Z",
+    "verdict": "BLOCKED",
+    "videoUrl": "http://localhost:8000/samples/corrupt.mp4",
+    "witness": "https://test-manager.lambdatest.com/projects/01M84G8RKNGTA7ADEM5WB5K3S6/test-cases/01M8BZ3ZSBJ0TV5TQDWR0Q3FDZ/dashboard/share/US_IOISKTYVVK08AIUHMXET4UDB0XPU1Z5EYB53VVELCNYGVN61643RFJKH81R17XEV?type=summary&agentView=true&fqdn=summary-page",
+    "evidence": "Moving frames: no signal · Black/blank screen: no signal"
+  },
+  {
+    "claim": "Your video has been sent and is ready to watch.",
+    "id": "gate-1795697472949",
+    "sentClaim": "Not sent. The delivery could not be verified: Kane watched the file and did not see real playing video frames. (Kane produced no visual proof of real frames in this run (fail-closed))",
+    "time": "2026-11-26T12:53:17.689Z",
+    "verdict": "BLOCKED",
+    "videoUrl": "http://localhost:8000/samples/blank.mp4",
+    "witness": "https://test-manager.lambdatest.com/projects/01M84G8RKNGTA7ADEM5WB5K3S6/test-cases/01M8BYJ1AMFM7N53E6BH6031JK/dashboard/share/US_5O76VO9M148V8DCKSZKK3UO29VPB3HHGXL5LEW4VV0AMLYBKFY6FX364LJCFKNBC?type=summary&agentView=true&fqdn=summary-page",
+    "evidence": "Moving frames: not seen · Black/blank screen: yes"
+  },
+  {
+    "claim": "Your video has been sent and is ready to watch.",
+    "id": "gate-1795697082095",
+    "sentClaim": "Your video has been sent and is ready to watch.",
+    "time": "2026-11-26T12:47:25.715Z",
+    "verdict": "RELEASED",
+    "videoUrl": "http://localhost:8000/samples/good.mp4",
+    "witness": "https://test-manager.lambdatest.com/projects/01M84G8RKNGTA7ADEM5WB5K3S6/test-cases/01M8BY6CD0GC21FZYXH4MT0RWZ/dashboard/share/US_7HCV7MW1KBB2NECMC6570EEP66XXA1ZINPANZUXVO9QRALOO833OA1MV9BNEZQ6G?type=summary&agentView=true&fqdn=summary-page",
+    "evidence": "Moving frames: seen · Black/blank screen: no"
+  }
+]

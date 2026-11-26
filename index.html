@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movidence — verdicts</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; background: #f5f5f4; color: #17171c; -webkit-font-smoothing: antialiased; }
+  .shell { max-width: 1080px; margin: 0 auto; padding: 32px 24px 64px; }
+  .topbar { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 1px solid #e3e3e0; }
+  .mark { width: 28px; height: 28px; display: grid; place-items: center; }
+  .topbar .name { font-weight: 650; font-size: 15px; }
+  .topbar .sub { color: #6d6d74; font-size: 13px; }
+  h1 { font-size: 28px; line-height: 1.2; letter-spacing: -.02em; font-weight: 700; margin: 32px 0 8px; }
+  .lede { font-size: 15px; line-height: 1.6; color: #55555c; margin: 0; max-width: 66ch; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+  .card { background: #fff; border: 1px solid #e3e3e0; border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(16,16,20,.04); }
+  .card span { display: block; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #6d6d74; }
+  .card b { display: block; font-size: 36px; line-height: 1.1; font-weight: 700; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .card p { margin: 8px 0 0; font-size: 13px; color: #55555c; line-height: 1.5; }
+  .card.ok b { color: #0d7a3f; } .card.bad b { color: #d92c1c; }
+  .panel { background: #fff; border: 1px solid #e3e3e0; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,16,20,.04); overflow: hidden; }
+  .panel-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid #e3e3e0; }
+  .panel-head h2 { font-size: 14px; font-weight: 650; margin: 0; }
+  .panel-head span { font-size: 13px; color: #6d6d74; }
+  .record { padding: 24px 20px; border-bottom: 1px solid #eee; }
+  .record:last-child { border-bottom: 0; }
+  .rec-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .dot { width: 8px; height: 8px; border-radius: 999px; }
+  .dot.ok { background: #12a150; } .dot.bad { background: #e5484d; }
+  .verdict { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .verdict.ok { color: #0d7a3f; } .verdict.bad { color: #c62a20; }
+  .file { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: #f5f5f4; border: 1px solid #e3e3e0; border-radius: 6px; padding: 2px 8px; }
+  .rec-top time { margin-left: auto; font-size: 13px; color: #6d6d74; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .claim { font-size: 17px; font-weight: 650; line-height: 1.4; margin: 16px 0 4px; }
+  .sent { font-size: 14px; line-height: 1.6; color: #55555c; margin: 0; max-width: 68ch; }
+  .strip { margin: 20px 0 0; }
+  .frames { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .frame { aspect-ratio: 16/9; background: #000; border-radius: 6px; overflow: hidden; }
+  .frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .frame.empty { background: #ececea; box-shadow: inset 0 0 0 1px #e3e3e0; }
+  .strip figcaption { font-size: 12px; color: #6d6d74; margin-top: 8px; }
+  .signals { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 20px; padding-top: 16px; border-top: 1px solid #f0f0ee; }
+  .signal span { display: block; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #6d6d74; margin-bottom: 4px; }
+  .signal b { font-family: ui-monospace, Consolas, monospace; font-size: 13px; font-weight: 600; }
+  .signal.witness { margin-left: auto; }
+  a.witness { color: #4f46e5; font-weight: 600; font-size: 13px; text-decoration: none; }
+  a.witness:hover { text-decoration: underline; text-underline-offset: 3px; }
+  a.witness:focus-visible { outline: 2px solid #4f46e5; outline-offset: 3px; border-radius: 4px; }
+  .rules { margin-top: 32px; background: #fff; border: 1px solid #e3e3e0; border-radius: 12px; padding: 24px 20px; box-shadow: 0 1px 2px rgba(16,16,20,.04); }
+  .rules h2 { font-size: 14px; font-weight: 650; margin: 0 0 8px; }
+  .rule { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid #f0f0ee; }
+  .rule .n { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: #6d6d74; padding-top: 2px; }
+  .rule p { margin: 0; font-size: 14px; line-height: 1.6; color: #33333a; }
+  footer { margin-top: 32px; font-size: 12px; line-height: 1.6; color: #8a8a91; text-align: center; }
+  @media (max-width: 640px) { .cards { grid-template-columns: 1fr; } .frames { grid-template-columns: repeat(2, 1fr); } .signal.witness { margin-left: 0; } .rec-top time { margin-left: 0; width: 100%; } }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar"><div class="mark"><svg width="28" height="28" viewBox="128 128 224 224" aria-label="Movidence mark"><defs><linearGradient id="pbl" gradientUnits="userSpaceOnUse" x1="240" y1="216" x2="160" y2="216"><stop offset="0" stop-color="#e8442e" stop-opacity=".95"/><stop offset="1" stop-color="#e8442e" stop-opacity=".25"/></linearGradient><linearGradient id="pbr" gradientUnits="userSpaceOnUse" x1="240" y1="216" x2="320" y2="216"><stop offset="0" stop-color="#e8442e" stop-opacity=".95"/><stop offset="1" stop-color="#e8442e" stop-opacity=".25"/></linearGradient></defs><rect x="128" y="128" width="224" height="224" rx="48" fill="#f3ead9"/><polygon points="240,216 164,182 164,250" fill="url(#pbl)"/><polygon points="240,216 316,182 316,250" fill="url(#pbr)"/><polygon points="223,306 257,306 249,238 231,238" fill="#1c1a17"/><circle cx="240" cy="216" r="11" fill="#e8442e"/><rect x="212" y="306" width="56" height="7" fill="#1c1a17"/></svg></div><div><div class="name">Movidence</div><div class="sub">Delivery gate &middot; verdict log</div></div></div>
+  <h1>Delivery verdicts</h1>
+  <p class="lede">An agent asks to report a video as sent. The gate hands the actual file to Kane CLI, which opens it in a real browser, presses play, and reports what it saw. A claim is released only with Kane&rsquo;s evidence behind it.</p>
+  <div class="cards">
+    <div class="card"><span>Checked</span><b>3</b><p>Deliveries inspected by Kane in this log.</p></div>
+    <div class="card ok"><span>Released</span><b>1</b><p>Claims released with visual proof of real frames.</p></div>
+    <div class="card bad"><span>Blocked</span><b>2</b><p>Claims stopped and rewritten honestly.</p></div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h2>Verdict log</h2><span>Newest first &middot; every attempt recorded</span></div>
+
+    <article class="record">
+      <div class="rec-top"><span class="dot bad"></span><span class="verdict bad">BLOCKED</span><span class="file">corrupt.mp4</span><time>26 Nov 2026, 13:02 UTC</time></div>
+      <h3 class="claim">&ldquo;Your video has been sent and is ready to watch.&rdquo;</h3>
+      <p class="sent">Not sent. The delivery could not be verified: Kane watched the file and did not see real playing video frames. (Kane produced no visual proof of real frames in this run (fail-closed))</p>
+      
+      <figure class="strip"><div class="frames"><div class="frame empty"></div><div class="frame empty"></div><div class="frame empty"></div><div class="frame empty"></div></div><figcaption>No frames — the file could not be played at all.</figcaption></figure>
+      <div class="signals">
+        <div class="signal"><span>Moving frames</span><b>no signal</b></div>
+        <div class="signal"><span>Black / blank screen</span><b>no signal</b></div>
+        <div class="signal witness"><span>Witness</span><a class="witness" href="https://test-manager.lambdatest.com/projects/01M84G8RKNGTA7ADEM5WB5K3S6/test-cases/01M8BZ3ZSBJ0TV5TQDWR0Q3FDZ/dashboard/share/US_IOISKTYVVK08AIUHMXET4UDB0XPU1Z5EYB53VVELCNYGVN61643RFJKH81R17XEV?type=summary&amp;agentView=true&amp;fqdn=summary-page">Kane session recording</a></div>
+      </div>
+    </article>
+
+    <article class="record">
+      <div class="rec-top"><span class="dot bad"></span><span class="verdict bad">BLOCKED</span><span class="file">blank.mp4</span><time>26 Nov 2026, 12:53 UTC</time></div>
+      <h3 class="claim">&ldquo;Your video has been sent and is ready to watch.&rdquo;</h3>
+      <p class="sent">Not sent. The delivery could not be verified: Kane watched the file and did not see real playing video frames. (Kane produced no visual proof of real frames in this run (fail-closed))</p>
+      
+      <figure class="strip"><div class="frames"><div class="frame"><img src="assets/frames/blank.jpg" alt="Frame sampled from blank.mp4: solid black"></div><div class="frame"><img src="assets/frames/blank.jpg" alt="Frame sampled from blank.mp4: solid black"></div><div class="frame"><img src="assets/frames/blank.jpg" alt="Frame sampled from blank.mp4: solid black"></div><div class="frame"><img src="assets/frames/blank.jpg" alt="Frame sampled from blank.mp4: solid black"></div></div><figcaption>Frames sampled across the file — every one identical: black.</figcaption></figure>
+      <div class="signals">
+        <div class="signal"><span>Moving frames</span><b>not seen</b></div>
+        <div class="signal"><span>Black / blank screen</span><b>yes</b></div>
+        <div class="signal witness"><span>Witness</span><a class="witness" href="https://test-manager.lambdatest.com/projects/01M84G8RKNGTA7ADEM5WB5K3S6/test-cases/01M8BYJ1AMFM7N53E6BH6031JK/dashboard/share/US_5O76VO9M148V8DCKSZKK3UO29VPB3HHGXL5LEW4VV0AMLYBKFY6FX364LJCFKNBC?type=summary&amp;agentView=true&amp;fqdn=summary-page">Kane session recording</a></div>
+      </div>
+    </article>
+
+    <article class="record">
+      <div class="rec-top"><span class="dot ok"></span><span class="verdict ok">RELEASED</span><span class="file">good.mp4</span><time>26 Nov 2026, 12:47 UTC</time></div>
+      <h3 class="claim">&ldquo;Your video has been sent and is ready to watch.&rdquo;</h3>
+      <p class="sent">Your video has been sent and is ready to watch.</p>
+      
+      <figure class="strip"><div class="frames"><div class="frame"><img src="assets/frames/good-05.jpg" alt="Frame sampled from good.mp4: a colour test pattern with a moving sweep"></div><div class="frame"><img src="assets/frames/good-2.jpg" alt="Frame sampled from good.mp4: a colour test pattern with a moving sweep"></div><div class="frame"><img src="assets/frames/good-35.jpg" alt="Frame sampled from good.mp4: a colour test pattern with a moving sweep"></div><div class="frame"><img src="assets/frames/good-5.jpg" alt="Frame sampled from good.mp4: a colour test pattern with a moving sweep"></div></div><figcaption>Frames sampled across the file — picture content throughout.</figcaption></figure>
+      <div class="signals">
+        <div class="signal"><span>Moving frames</span><b>seen</b></div>
+        <div class="signal"><span>Black / blank screen</span><b>no</b></div>
+        <div class="signal witness"><span>Witness</span><a class="witness" href="https://test-manager.lambdatest.com/projects/01M84G8RKNGTA7ADEM5WB5K3S6/test-cases/01M8BY6CD0GC21FZYXH4MT0RWZ/dashboard/share/US_7HCV7MW1KBB2NECMC6570EEP66XXA1ZINPANZUXVO9QRALOO833OA1MV9BNEZQ6G?type=summary&amp;agentView=true&amp;fqdn=summary-page">Kane session recording</a></div>
+      </div>
+    </article>
+  </div>
+  <section class="rules">
+    <h2>How a verdict is earned</h2>
+    <div class="rule"><span class="n">01</span><p>Kane must see moving frames with real picture content. A black or blank screen fails, however long it plays.</p></div>
+    <div class="rule"><span class="n">02</span><p>The verdict reads Kane&rsquo;s evidence, not its pass/fail headline. A pass that produced no visual proof is blocked &mdash; the gate fails closed.</p></div>
+    <div class="rule"><span class="n">03</span><p>Every check is a unique question, asked once, of the actual file. No replays, no wrappers, no taking the sender&rsquo;s word.</p></div>
+  </section>
+  <footer>Generated by the gate (gate/gate.mjs) from verdicts.json &middot; Frame strips are sampled from the checked files themselves &middot; Verified with Kane CLI by TestMu AI.</footer>
+</div>
+</body>
+</html>
